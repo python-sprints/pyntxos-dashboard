@@ -1,0 +1,4 @@
+ipywidgets
+folium
+voila
+jupyter
