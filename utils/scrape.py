@@ -1,13 +1,18 @@
 print("Do not import utils.scrape without running pip install -r scrape_requirements.")
 
+
+import os
 from functools import lru_cache
 
 import requests
 from bs4 import BeautifulSoup
 from geopy.geocoders import Nominatim, OpenMapQuest
+from dotenv import load_dotenv
 
 # import utils.data
 
+
+load_dotenv()
 bilbao_turismo_base_url = "http://www.bilbaoturismo.net"
 max_bilbao_turismo_pintxo_finder_pages = 10
 
@@ -30,6 +35,9 @@ dummy = [
 
 
 def scrape(dummy_flag=False, api_key=None):
+
+    if api_key is None:
+        api_key = os.environ.get('OPEN_MAP_QUEST_API_KEY', None)
 
     if dummy_flag:
         data = dummy
@@ -88,8 +96,8 @@ def get_bilbao_turismo_restaurant_links():
         soup = BeautifulSoup(r.text, features="html.parser")
         # Get all the restaurant links by filtering on "/pintxo-finder/"
         single_page_restaurant_links = [
-            get_bilbao_turismo_link(item.attrs["href"])
-            for item in soup.select("a[href*=\/pintxo-finder\/]")
+            get_bilbao_turismo_link(item.attrs['href'])
+            for item in soup.select(r'a[href*=\/pintxo-finder\/]')
         ]
         restaurant_links += single_page_restaurant_links
 
